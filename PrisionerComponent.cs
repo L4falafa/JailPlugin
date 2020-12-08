@@ -6,19 +6,39 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace JailPlugin
+namespace Lafalafa.JailPlugin
 {
-    class PrisionerComponent : MonoBehaviour
+    public class PrisionerComponent : MonoBehaviour
     {
 
-        UnturnedPlayer prisioner;
+        public UnturnedPlayer prisioner;
+        UnturnedPlayer judge;
+        string reason;
+        int time;
+        JailModel jail;
 
-        public PrisionerComponent()
+        public PrisionerComponent(UnturnedPlayer judge, string reason, int time, string jailName)
         { 
         
-            
+               
 
         }
+        void Awake()
+        {
 
+            prisioner = GetComponent<UnturnedPlayer>();
+
+        }
+            void Update()
+        {
+
+            if(Vector3.Distance(prisioner.Position, jail.loc) > jail.radius )
+            {
+
+
+
+            }
+
+        }
     }
 }

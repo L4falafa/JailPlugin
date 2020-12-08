@@ -11,11 +11,11 @@ namespace Lafalafa.JailPlugin
 {
     public class Jail : RocketPlugin<JailConfig>
     {
-
+        private static List<JailModel> jails;
         protected override void Load()
         {
             
-
+            
 
         }
         protected override void Unload()

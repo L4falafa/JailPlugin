@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Jail.cs" />
     <Compile Include="JailConfig.cs" />
+    <Compile Include="JailModel.cs" />
     <Compile Include="PrisionerComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
