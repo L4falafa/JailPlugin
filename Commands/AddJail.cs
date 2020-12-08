@@ -17,7 +17,7 @@ namespace Lafalafa.JailPlugin.Commands
 
         public string Syntax => "/addJail name radio";
 
-        public List<string> Aliases => throw new NotImplementedException();
+        public List<string> Aliases => new List<string>() { "ajail"};
 
         public List<string> Permissions => new List<string>() { "jailplugin.add"};
 

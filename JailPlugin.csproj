@@ -32,19 +32,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\OneDrive\Documentos\Plugins\Libraries\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\UnturnedPlugins\BreakAndEnter-1.1.0\BreakAndEnter-1.1.0\Libraries\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\..\OneDrive\Documentos\Plugins\Libraries\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\UnturnedPlugins\BreakAndEnter-1.1.0\BreakAndEnter-1.1.0\Libraries\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="Rocket.API">
-      <HintPath>..\..\..\OneDrive\Documentos\Plugins\Libraries\Rocket.API.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\UnturnedPlugins\BreakAndEnter-1.1.0\BreakAndEnter-1.1.0\Libraries\Rocket.API.dll</HintPath>
     </Reference>
     <Reference Include="Rocket.Core">
-      <HintPath>..\..\..\OneDrive\Documentos\Plugins\Libraries\Rocket.Core.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\UnturnedPlugins\BreakAndEnter-1.1.0\BreakAndEnter-1.1.0\Libraries\Rocket.Core.dll</HintPath>
     </Reference>
     <Reference Include="Rocket.Unturned">
-      <HintPath>..\..\..\OneDrive\Documentos\Plugins\Libraries\Rocket.Unturned.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\UnturnedPlugins\BreakAndEnter-1.1.0\BreakAndEnter-1.1.0\Libraries\Rocket.Unturned.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -55,14 +55,18 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\OneDrive\Documentos\Plugins\Libraries\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\UnturnedPlugins\BreakAndEnter-1.1.0\BreakAndEnter-1.1.0\Libraries\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\OneDrive\Documentos\Plugins\Libraries\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\UnturnedPlugins\BreakAndEnter-1.1.0\BreakAndEnter-1.1.0\Libraries\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>..\..\..\..\Desktop\UnturnedPlugins\BreakAndEnter-1.1.0\BreakAndEnter-1.1.0\Libraries\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AddJail.cs" />
+    <Compile Include="Helpers\StoreData.cs" />
     <Compile Include="Jail.cs" />
     <Compile Include="JailConfig.cs" />
     <Compile Include="JailModel.cs" />
