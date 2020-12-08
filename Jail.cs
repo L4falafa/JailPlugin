@@ -1,11 +1,12 @@
 ﻿using Rocket.API.Collections;
 using Rocket.Core.Plugins;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using UnityEngine;
 
 namespace Lafalafa.JailPlugin
 {
@@ -22,7 +23,17 @@ namespace Lafalafa.JailPlugin
         {
 
         }
+        private IEnumerator checkPrisioner()
+        {
 
+            while (this.enabled)
+            {
+
+                yield return new WaitForSeconds(1);
+
+            }
+
+        }
         #region traduccion
         public override TranslationList DefaultTranslations => new TranslationList()
         {

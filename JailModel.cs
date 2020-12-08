@@ -14,34 +14,53 @@ namespace Lafalafa.JailPlugin
 
         private static List<JailModel> jails;
 
-        private List<PrisionerComponent> prisioners;
-        private string name;
-        private int defaultTime;
+        private List<Prisioner> prisioners;
+        public string name;
         public Vector3 loc;
         public int radius;
 
-        public JailModel(string name, int defaultTime, Vector3 loc, int radius)
+        public JailModel(string name, Vector3 loc, int radius)
         {
 
             this.radius = radius;
             this.name = name;
             this.loc = loc;
-            this.defaultTime = defaultTime;
-
+            
 
         }
+        public static void addNewJail(string name, int radius)
+        { 
+        
+            //TODO json
 
+        }
         public static List<JailModel> getJails()
         {
 
             return jails;
 
         }
+        public static JailModel getJailFromName(string name)
+        {
+            foreach (JailModel jail in jails)
+            {
 
+
+                if (jail.name.ToLower() == name.ToLower())
+                {
+
+                    return jail;
+                }
+               
+            }
+
+            return null;
+
+        }
         public void removePrisionerJail(CSteamID steamID)
         {
 
-            foreach (PrisionerComponent player in prisioners)
+            foreach (Prisioner player in prisioners)
             {
 
                 if (player.prisioner.CSteamID == steamID)
@@ -56,10 +75,10 @@ namespace Lafalafa.JailPlugin
 
         }
         
-        public void addPrisionerJail()
+        public void addPrisionerJail(Prisioner prisioner)
         {
 
-
+            prisioners.Add(prisioner);
 
         }
 
