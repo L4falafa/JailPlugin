@@ -28,7 +28,7 @@ namespace Lafalafa.JailPlugin.Commands
             if (int.TryParse(command[1], out int result))
             {
 
-                JailModel.addNewJail(command[0], result);
+                //JailModel.addNewJail(command[0], result);
 
             }
             else
