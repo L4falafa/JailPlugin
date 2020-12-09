@@ -1,6 +1,10 @@
 ﻿using Lafalafa.JailPlugin.Helpers;
+using Rocket.API;
 using Rocket.API.Collections;
+using Rocket.Core;
 using Rocket.Core.Plugins;
+using Rocket.Unturned;
+using Rocket.Unturned.Player;
 using SDG.Unturned;
 using System;
 using System.Collections;
@@ -29,8 +33,8 @@ namespace Lafalafa.JailPlugin
 
             }
             StoreData.loadJails();
-
-
+            U.Events.OnPlayerConnected += Events_OnPlayerConnected;
+            U.Events.OnPlayerDisconnected += Events_OnPlayerDisconnected;
 
             Console.WriteLine($"Total jails loaded {JailModel.getJails().Count }");
            
@@ -39,10 +43,42 @@ namespace Lafalafa.JailPlugin
             StartCoroutine(checkPrisioner());
 
         }
+
+   
+
         protected override void Unload()
         {
+            U.Events.OnPlayerConnected -= Events_OnPlayerConnected;
+            U.Events.OnPlayerDisconnected -= Events_OnPlayerDisconnected;
+        }
+
+        private void Events_OnPlayerDisconnected(UnturnedPlayer player)
+        {
+            Prisioner prisioner = JailModel.getPlayer(player.CSteamID);
+            if (prisioner != null)
+            {
+
+                prisioner.online = false;
+                prisioner.stopTimer();
+
+            }
+        }
+
+        private void Events_OnPlayerConnected(UnturnedPlayer player)
+        {
+
+            Prisioner prisioner = JailModel.getPlayer(player.CSteamID);
+            if (prisioner != null)
+            {
+               
+                prisioner.online = true;
+                prisioner.startTimer();
+
+            }
 
         }
+
+
         private IEnumerator checkPrisioner()
         {
 
@@ -58,8 +94,8 @@ namespace Lafalafa.JailPlugin
                             if (Vector3.Distance(prisioner.prisioner.Position, new Vector3(jailModel.x, jailModel.y, jailModel.z)) > jailModel.radius)
                             {
 
-                                jailModel.escapePlayer(prisioner.prisioner.CSteamID);
-
+                                jailModel.removePrisionerJail(prisioner.prisioner.CSteamID);
+                                
                             }
                         }
                     }
@@ -72,30 +108,25 @@ namespace Lafalafa.JailPlugin
         }
 
         #region mensajeSendToAll
-        public void sendMessageToAll(string translate)
-        { 
-        
-            Provider.clients.ForEach(client=>
-            { 
-            
-         
+        //public void sendMessageToAll(string translate)
+        //{
 
-            });
+           
 
-        }
-        public static void sendMessageToAll(string translate, string arg1)
-        {
+        //}
+        //public static void sendMessageToAll(string translate, string arg1)
+        //{
 
-        }
-        public static void sendMessageToAll(string translate, string arg1, string arg2)
-        {
+        //}
+        //public static void sendMessageToAll(string translate, string arg1, string arg2)
+        //{
 
-        }
+        //}
 
-        public static void sendMessageToAll(string translate, string arg1, string arg2, string arg3)
-        {
+        //public static void sendMessageToAll(string translate, string arg1, string arg2, string arg3)
+        //{
 
-        }
+        //}
 
         #endregion
 

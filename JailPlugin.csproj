@@ -66,6 +66,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AddJail.cs" />
+    <Compile Include="Commands\ArrestPlayer.cs" />
+    <Compile Include="Commands\Prisioners.cs" />
+    <Compile Include="Commands\ReleasePlayer.cs" />
+    <Compile Include="Commands\RemoveJail.cs" />
     <Compile Include="Helpers\StoreData.cs" />
     <Compile Include="Jail.cs" />
     <Compile Include="JailConfig.cs" />

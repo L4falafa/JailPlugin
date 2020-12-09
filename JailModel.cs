@@ -1,4 +1,5 @@
 ﻿using Lafalafa.JailPlugin.Helpers;
+using Rocket.Unturned.Player;
 using Steamworks;
 using System;
 using System.Collections.Generic;
@@ -72,13 +73,26 @@ namespace Lafalafa.JailPlugin
             return null;
 
         }
+        public static Prisioner getPlayer(CSteamID steamID)
+        {
 
-        public void escapePlayer(CSteamID steamID)
-        { 
-        
-            //TODO Mensaje Escape
+            foreach(JailModel jail in jails)
+            {
 
+                foreach (Prisioner prisioner in jail.prisioners)
+                {
 
+                    if (prisioner.prisioner.CSteamID.m_SteamID == steamID.m_SteamID)
+                    {
+
+                        return prisioner;
+                      
+                    }
+
+                }
+
+            }
+            return null;
         }
 
         public void removePrisionerJail(CSteamID steamID)
@@ -89,7 +103,7 @@ namespace Lafalafa.JailPlugin
 
                 if (player.prisioner.CSteamID == steamID)
                 {
-
+                    player.release();
                     prisioners.Remove(player);
 
                     break;

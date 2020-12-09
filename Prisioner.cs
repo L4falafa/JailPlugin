@@ -21,8 +21,8 @@ namespace Lafalafa.JailPlugin
         Timer timer;
         public UnturnedPlayer prisioner;
         public bool online { get; set; }
-        UnturnedPlayer judge;
-        JailModel jail;
+        private UnturnedPlayer judge;
+        private JailModel jail;
 
         public Prisioner(UnturnedPlayer prisioner, UnturnedPlayer judge, int time, string jailName)
         {
@@ -36,11 +36,21 @@ namespace Lafalafa.JailPlugin
             timer.Enabled = true;
             timer.Start();
         }
+        public void stopTimer() => timer.Stop();
+        public void startTimer() => timer.Start();
 
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        public void release()
         {
 
+            timer.Stop();                
+            timer.Dispose();
             timer.Elapsed -= Timer_Elapsed;
+
+        }
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            //TODO liberar
+           
         }
     }
 }
