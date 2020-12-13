@@ -39,7 +39,7 @@ namespace Lafalafa.JailPlugin
         public static void addNewJail(string name, int radius, Vector3 loc)
         {
 
-            //TODO json
+           
             JailModel jail = new JailModel();
             jail.name = name;
             jail.radius = radius;
@@ -47,13 +47,24 @@ namespace Lafalafa.JailPlugin
             jail.y = loc.y;
             jail.z = loc.z;
             jails.Add(jail);
-
-            StoreData.writeObject();
         }
         public static List<JailModel> getJails()
         {
 
             return jails;
+
+        }
+
+        public static void removeJail(string name)
+        {
+            JailModel jail = JailModel.getJailFromName(name);
+            if (jail != null)
+            {
+
+                jails.Remove(jail);
+                StoreData.writeObject();
+
+            }
 
         }
         public static JailModel getJailFromName(string name)
@@ -66,6 +77,7 @@ namespace Lafalafa.JailPlugin
                 {
 
                     return jail;
+
                 }
                
             }

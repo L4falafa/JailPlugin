@@ -65,11 +65,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\AddJail.cs" />
-    <Compile Include="Commands\ArrestPlayer.cs" />
-    <Compile Include="Commands\Prisioners.cs" />
-    <Compile Include="Commands\ReleasePlayer.cs" />
-    <Compile Include="Commands\RemoveJail.cs" />
+    <Compile Include="Commands\JailCommand.cs" />
+    <Compile Include="Commands\PrisionerAddCommand.cs" />
+    <Compile Include="Commands\PrisionerRemove.cs" />
+    <Compile Include="Commands\PrisionersCommand.cs" />
+    <Compile Include="Helpers\InventoryHelp.cs" />
     <Compile Include="Helpers\StoreData.cs" />
     <Compile Include="Jail.cs" />
     <Compile Include="JailConfig.cs" />

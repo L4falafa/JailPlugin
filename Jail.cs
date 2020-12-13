@@ -6,6 +6,7 @@ using Rocket.Core.Plugins;
 using Rocket.Unturned;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
+using Steamworks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace Lafalafa.JailPlugin
     public class Jail : RocketPlugin<JailConfig>
     {
         public static Jail instance;
+        public static string namePluginChat = "<color=red>Jail</color>: ";
         protected override void Load()
         {
             instance = this;
@@ -30,15 +32,12 @@ namespace Lafalafa.JailPlugin
             {
 
                 StoreData.createFile();
-
+;
             }
             StoreData.loadJails();
+           
             U.Events.OnPlayerConnected += Events_OnPlayerConnected;
             U.Events.OnPlayerDisconnected += Events_OnPlayerDisconnected;
-
-            Console.WriteLine($"Total jails loaded {JailModel.getJails().Count }");
-           
-            
 
             StartCoroutine(checkPrisioner());
 
@@ -84,20 +83,43 @@ namespace Lafalafa.JailPlugin
 
             while (this.enabled)
             {
+        
                 foreach (JailModel jailModel in JailModel.getJails())
                 {
-
+             
+                    var toRemove = new List<CSteamID>();
                     foreach (Prisioner prisioner in jailModel.prisioners)
                     {
                         if (prisioner.online)
                         {
+
                             if (Vector3.Distance(prisioner.prisioner.Position, new Vector3(jailModel.x, jailModel.y, jailModel.z)) > jailModel.radius)
                             {
 
-                                jailModel.removePrisionerJail(prisioner.prisioner.CSteamID);
-                                
-                            }
+                                toRemove.Add(prisioner.prisioner.CSteamID);
+                                UnturnedPlayer uclient;
+                                Provider.clients.ForEach(client =>
+                                {
+                                    uclient = UnturnedPlayer.FromSteamPlayer(client);
+
+                                    if (uclient.HasPermission("jailplugin.police"))
+                                    {
+                                        //TODO PlayerEscapes Args = nombre, jailname, time   player_escape_police
+                                        ChatManager.serverSendMessage(string.Format(Jail.instance.Translations.Instance.Translate("player_escape_police", prisioner.prisioner.DisplayName, prisioner.jail.name, (prisioner.elapsedTime().ElapsedMilliseconds / 1000)).Replace('(', '<').Replace(')', '>')), Color.white, null, client, EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
+                                    }
+                                });
+                                Provider.clients.ForEach(client =>
+                                { 
+                                    //TODO PlayerEscapes civilian Args = nombre, jailname, time   player_escape_civilian
+                                    ChatManager.serverSendMessage(string.Format(Jail.instance.Translations.Instance.Translate("player_escape_civilian", prisioner.prisioner.DisplayName, prisioner.jail.name, (prisioner.elapsedTime().ElapsedMilliseconds / 1000)).Replace('(', '<').Replace(')', '>')), Color.white, null, client, EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
+                                });
+
+                    }
                         }
+                    }
+                    foreach (CSteamID prisioner1 in toRemove)
+                    {
+                        jailModel.removePrisionerJail(prisioner1);
                     }
 
                 }
@@ -106,29 +128,6 @@ namespace Lafalafa.JailPlugin
             }
 
         }
-
-        #region mensajeSendToAll
-        //public void sendMessageToAll(string translate)
-        //{
-
-           
-
-        //}
-        //public static void sendMessageToAll(string translate, string arg1)
-        //{
-
-        //}
-        //public static void sendMessageToAll(string translate, string arg1, string arg2)
-        //{
-
-        //}
-
-        //public static void sendMessageToAll(string translate, string arg1, string arg2, string arg3)
-        //{
-
-        //}
-
-        #endregion
 
         #region traduccion
         public override TranslationList DefaultTranslations => new TranslationList()
