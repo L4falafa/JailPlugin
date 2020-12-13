@@ -1,4 +1,8 @@
-﻿using Rocket.Unturned.Player;
+﻿using Rocket.API;
+using Rocket.Core.Utils;
+using Rocket.Unturned.Player;
+using SDG.Unturned;
+using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +14,7 @@ using UnityEngine;
 
 namespace Lafalafa.JailPlugin
 {
-    public class Prisioner
+    public class Prisoner
     {
         //aTimer = new System.Timers.Timer(2000);
         //// Hook up the Elapsed event for the timer. 
@@ -19,18 +23,21 @@ namespace Lafalafa.JailPlugin
         //aTimer.Enabled = true;
 
 
-        Timer timer;
+        public Timer timer { get; private set; }
         public UnturnedPlayer prisioner;
         public bool online { get; set; }
         private Stopwatch _elapsedTime;
-        private UnturnedPlayer judge;
+        public bool reviving { get; set; }
+        public CSteamID judge { get; private set; }
         public JailModel jail { get; private    set; }
         
 
-        public Prisioner(UnturnedPlayer prisioner, UnturnedPlayer judge, int time, string jailName)
+        public Prisoner(UnturnedPlayer prisioner, UnturnedPlayer judge, int time, string jailName)
         {
             this.prisioner = prisioner;
-            this.judge = judge;
+            this.judge = judge.CSteamID;
+
+            if (Jail.instance.Configuration.Instance.God) prisioner.Features.GodMode = true;
             timer =  new Timer(time*1000);
             online = true;
             jail = JailModel.getJailFromName(jailName);
@@ -63,18 +70,52 @@ namespace Lafalafa.JailPlugin
 
         public void release()
         {
-
+            
             timer.Stop();                
             timer.Dispose();
             timer.Elapsed -= Timer_Elapsed;
+            _elapsedTime.Stop();
+            
 
         }
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            //TODO liberar !IMPORTANTE!
-            Console.WriteLine(_elapsedTime.ElapsedMilliseconds / 1000);
-            this.jail.removePrisionerJail(this.prisioner.CSteamID);
-            //persona liberada mensaje
+            this.jail.removePrisonerJail(this.prisioner.CSteamID);
+            if (Jail.instance.Configuration.Instance.teleportToSpawn)
+            {
+                
+            }
+            UnturnedPlayer uclient;           
+            // Code to run on the main thread
+            TaskDispatcher.QueueOnMainThread(() =>
+            {
+                prisioner.Player.teleportToLocationUnsafe(Jail.instance.Configuration.Instance.spawn, prisioner.Player.look.yaw);
+                if (Jail.instance.Configuration.Instance.broadcastRelease)
+                {
+
+                    Provider.clients.ForEach(client =>
+                    {
+
+                    //TODO Free by time args= prisionername, jailname, ,time   release_time
+                    ChatManager.serverSendMessage(string.Format(Jail.instance.Translations.Instance.Translate("release_time", prisioner.DisplayName, this.jail.name, this._elapsedTime.ElapsedMilliseconds / 1000).Replace('(', '<').Replace(')', '>')), Color.white, null, client, EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
+                    });
+                }
+                else
+                {
+
+                    Provider.clients.ForEach(client =>
+                    {
+                        uclient = UnturnedPlayer.FromSteamPlayer(client);
+
+                        if (uclient.HasPermission("jailplugin.police"))
+                        {
+
+                            ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("release_time", prisioner.DisplayName, this.jail.name, this._elapsedTime.ElapsedMilliseconds / 1000).Replace('(', '<').Replace(')', '>')}"), Color.white, null, client, EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
+                        }
+                    });
+
+                }
+            });
         }
     }
 }

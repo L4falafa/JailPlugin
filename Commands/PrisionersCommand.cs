@@ -10,19 +10,19 @@ using UnityEngine;
 
 namespace Lafalafa.JailPlugin.Commands
 {
-    class PrisionersCommand : IRocketCommand
+    class PrisonersCommand : IRocketCommand
     {
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
-        public string Name => "prisioners";
+        public string Name => "prisoners";
 
-        public string Help => "See availible prisioners and can check one";
+        public string Help => "See availible prisoners and can check one";
 
-        public string Syntax => "/prisioners";
+        public string Syntax => "/prisoners";
 
         public List<string> Aliases => new List<string>() {"pall" };
 
-        public List<string> Permissions => new List<string>() { "jailplugin.prisioner.all" };
+        public List<string> Permissions => new List<string>() { "jailplugin.prisoner.all" };
 
         public void Execute(IRocketPlayer caller, string[] command)
         {
@@ -40,14 +40,14 @@ namespace Lafalafa.JailPlugin.Commands
                 {
 
                 ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}Jail: {jailModel.name}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
-
-                foreach (Prisioner prisioner in jailModel.prisioners)
+                string final = "";
+                foreach (Prisoner prisioner in jailModel.prisioners)
                     {
 
-
-                    ChatManager.serverSendMessage(string.Format($"Prisioner: {prisioner.prisioner.DisplayName}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
+                    final += $"Prisoner: {prisioner.prisioner.DisplayName}";
 
                     }
+                if(final != "") ChatManager.serverSendMessage(string.Format(final), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
 
 
 

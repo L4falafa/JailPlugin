@@ -3,6 +3,7 @@ using Rocket.Unturned.Player;
 using Steamworks;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace Lafalafa.JailPlugin
         [XmlIgnore]
         private static List<JailModel> jails = new List<JailModel>();
         [XmlIgnore]
-        public List<Prisioner> prisioners;
+        public List<Prisoner> prisioners;
         public string name { get; set; }
         public float x { get; set; }
         public float y { get; set; }
@@ -31,7 +32,7 @@ namespace Lafalafa.JailPlugin
 
         public JailModel()
         {
-            prisioners = new List<Prisioner>();
+            prisioners = new List<Prisoner>();
             
 
         }
@@ -39,7 +40,7 @@ namespace Lafalafa.JailPlugin
         public static void addNewJail(string name, int radius, Vector3 loc)
         {
 
-           
+            if (JailModel.getJailFromName(name) != null) return;
             JailModel jail = new JailModel();
             jail.name = name;
             jail.radius = radius;
@@ -58,11 +59,15 @@ namespace Lafalafa.JailPlugin
         public static void removeJail(string name)
         {
             JailModel jail = JailModel.getJailFromName(name);
+
             if (jail != null)
             {
-
+                if (JailModel.getJails().Count == 0)
+                {
+                    JailModel.addNewJail("Tes1", 10, new Vector3(10, 3, 6));
+                }
                 jails.Remove(jail);
-                StoreData.writeObject();
+               
 
             }
 
@@ -85,13 +90,13 @@ namespace Lafalafa.JailPlugin
             return null;
 
         }
-        public static Prisioner getPlayer(CSteamID steamID)
+        public static Prisoner getPlayer(CSteamID steamID)
         {
 
             foreach(JailModel jail in jails)
             {
 
-                foreach (Prisioner prisioner in jail.prisioners)
+                foreach (Prisoner prisioner in jail.prisioners)
                 {
 
                     if (prisioner.prisioner.CSteamID.m_SteamID == steamID.m_SteamID)
@@ -106,18 +111,25 @@ namespace Lafalafa.JailPlugin
             }
             return null;
         }
+        public static void unloadJails()
+        {
+            File.Delete(StoreData.path);
+            StoreData.writeObject();
+            jails.Clear();
 
-        public void removePrisionerJail(CSteamID steamID)
+        }
+        public void removePrisonerJail(CSteamID steamID)
         {
 
-            foreach (Prisioner player in prisioners)
+            foreach (Prisoner player in prisioners)
             {
 
                 if (player.prisioner.CSteamID == steamID)
                 {
+                    player.prisioner.Features.GodMode = false;
                     player.release();
                     prisioners.Remove(player);
-
+                    
                     break;
                 }
 
@@ -125,7 +137,7 @@ namespace Lafalafa.JailPlugin
 
         }
         
-        public void addPrisionerJail(Prisioner prisioner)
+        public void addPrisonerJail(Prisoner prisioner)
         {
 
             prisioners.Add(prisioner);

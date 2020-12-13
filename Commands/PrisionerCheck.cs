@@ -1,5 +1,4 @@
-﻿using Lafalafa.JailPlugin;
-using Rocket.API;
+﻿using Rocket.API;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
 using System;
@@ -11,19 +10,19 @@ using UnityEngine;
 
 namespace Lafalafa.JailPlugin.Commands
 {
-    public class PrisonerRemove : IRocketCommand
+    public class PrisonerCheck : IRocketCommand
     {
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
-        public string Name => "prisonerremove";
+        public string Name => "prisonercheck";
 
-        public string Help => "Release a player from their jail";
+        public string Help => "Get info about a prisioner";
 
-        public string Syntax => "/prisonerremove (playername)";
+        public string Syntax => "/prisonercheck (name)";
 
-        public List<string> Aliases => new List<string> { "release"};
+        public List<string> Aliases => new List<string>() { "pcheck" };
 
-        public List<string> Permissions => new List<string> { "jailplugin.prisoner.remove" };
+        public List<string> Permissions => new List<string>() { "jailplugin.check"};
 
         public void Execute(IRocketPlayer caller, string[] command)
         {
@@ -51,13 +50,8 @@ namespace Lafalafa.JailPlugin.Commands
                 ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("not_in_jail", target.DisplayName).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
                 return;
             }
-            prisioner.prisioner.Player.teleportToLocationUnsafe(Jail.instance.Configuration.Instance.spawn, prisioner.prisioner.Player.look.yaw);
-            prisioner.jail.removePrisonerJail(target.CSteamID);
-            //TODO To released player args = name, time to_released_player
-            ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("to_released_player", player.DisplayName,(prisioner.elapsedTime().ElapsedMilliseconds/1000)).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
-            //TODO Liberaste a x persona args = name, jail,time releases_player
-            ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("releases_player", target.DisplayName, prisioner.jail.name,(prisioner.elapsedTime().ElapsedMilliseconds / 1000)).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
-
+            //TODO Prisoner info args= prisionername,judgesteamid,jailname,time, remaining   info_prisioner
+            ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("info_prisioner", prisioner.prisioner.DisplayName, prisioner.judge, prisioner.jail.name, (prisioner.elapsedTime().ElapsedMilliseconds/1000), (int)(prisioner.timer.Interval - prisioner.elapsedTime().ElapsedMilliseconds)/1000).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
 
         }
     }

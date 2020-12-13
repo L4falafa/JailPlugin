@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\JailCommand.cs" />
+    <Compile Include="Commands\PrisionerCheck.cs" />
     <Compile Include="Commands\PrisionerAddCommand.cs" />
     <Compile Include="Commands\PrisionerRemove.cs" />
     <Compile Include="Commands\PrisionersCommand.cs" />

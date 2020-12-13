@@ -29,8 +29,9 @@ namespace Lafalafa.JailPlugin.Helpers
 
         public static void writeObject()
         {
-            using (var writer = new FileStream(path, FileMode.Open,FileAccess.Write))
+            using (var writer = new FileStream(path, FileMode.OpenOrCreate,FileAccess.Write))
             {
+               
                 var xml = new XmlSerializer(typeof(List<JailModel>));
                 xml.Serialize(writer, JailModel.getJails());
                 writer.Dispose();
