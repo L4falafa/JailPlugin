@@ -39,7 +39,7 @@ namespace Lafalafa.JailPlugin.Commands
             if (target == null)
             {
 
-                //TODO Player not found     player_not_found
+                
                 ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("player_not_found").Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
                 return;
 
@@ -47,7 +47,7 @@ namespace Lafalafa.JailPlugin.Commands
             Prisoner prisioner = JailModel.getPlayer(target.CSteamID);
             if (prisioner != null)
             {
-                //TODO El player ya esta en la carcel Args = nombrecarcel    player_already_at_jail
+               
                 ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("player_already_at_jail", prisioner.jail.name).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
                 return;
 
@@ -112,9 +112,9 @@ namespace Lafalafa.JailPlugin.Commands
                             target.Player.clothing.askVisualToggle(target.CSteamID, 0);
                             target.Player.clothing.tellVisualToggle(target.CSteamID, 0, false);
                             
-                        //TODO Te enviaron a x carcel Args = nombrejuez, jailname, time     player_send_you_to_jail
+                       
                         ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("player_send_you_to_jail", player.DisplayName, jail.name, radio).Replace('(', '<').Replace(')', '>')}"), Color.white, null, target.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
-                            //TODO Enviaste a x a p carcel Args = nombretarget, jailname, time     player_send_other_to_jail
+                          
                             ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("player_send_other_to_jail", player.DisplayName, jail.name, radio).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
 
                     }

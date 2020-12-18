@@ -96,7 +96,7 @@ namespace Lafalafa.JailPlugin
                     Provider.clients.ForEach(client =>
                     {
 
-                    //TODO Free by time args= prisionername, jailname, ,time   release_time
+                    
                     ChatManager.serverSendMessage(string.Format(Jail.instance.Translations.Instance.Translate("release_time", prisioner.DisplayName, this.jail.name, this._elapsedTime.ElapsedMilliseconds / 1000).Replace('(', '<').Replace(')', '>')), Color.white, null, client, EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
                     });
                 }

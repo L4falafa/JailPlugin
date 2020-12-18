@@ -31,6 +31,8 @@ namespace Lafalafa.JailPlugin.Commands
             UnturnedPlayer player = (UnturnedPlayer)caller;
             if (command.Length == 0)
             {
+                //TODO SendAllPlayerUi
+                EffectManager.sendUIEffect()
                 ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Syntax}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
                 return;
             }
@@ -64,13 +66,13 @@ namespace Lafalafa.JailPlugin.Commands
                                 JailModel.addNewJail(command[1], radius, player.Position);
                             }
                          
-                            //TODO Carcel añadida Arg = nombre, radio jail_add
+                            
                             ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("jail_add", command[1], radius).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
                         }
                         else
                         {
 
-                            //TODO Carcel existente Arg = nombre jail_exist
+             
                             ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("jail_exist", command[1]).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
                         }
                         break;
@@ -89,7 +91,7 @@ namespace Lafalafa.JailPlugin.Commands
                            
                             
                             
-                            //TODO Carcel removida Arg = nombre jail_removed
+                           
                             ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("jail_removed", command[1]).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
                         }
                         else
@@ -115,13 +117,13 @@ namespace Lafalafa.JailPlugin.Commands
                         }
                         else
                         {
-                            //TODO Mensaje no existe (Args = nombre) jail_not_exist
+                          
                             ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("jail_not_exist",command[1]).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
                             
                         }
                         break;
                     case "all":
-                        //TODO Mensaje todas las carceles disponibles 0 Args available_jails
+                       
                         ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("available_jails")}".Replace('(', '<').Replace(')', '>')), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
                         string final = "";
                         foreach (JailModel jailModel in JailModel.getJails())

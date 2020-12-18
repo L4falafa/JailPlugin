@@ -46,11 +46,11 @@ namespace Lafalafa.JailPlugin.Commands
             if (prisioner == null)
             {
 
-                //TODO No esta arrestado arg= name   not_in_jail
+             
                 ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("not_in_jail", target.DisplayName).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
                 return;
             }
-            //TODO Prisoner info args= prisionername,judgesteamid,jailname,time, remaining   info_prisioner
+           
             ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("info_prisioner", prisioner.prisioner.DisplayName, prisioner.judge, prisioner.jail.name, (prisioner.elapsedTime().ElapsedMilliseconds/1000), (int)(prisioner.timer.Interval - prisioner.elapsedTime().ElapsedMilliseconds)/1000).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
 
         }

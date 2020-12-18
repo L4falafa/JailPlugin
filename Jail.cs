@@ -25,6 +25,7 @@ namespace Lafalafa.JailPlugin
         public static string namePluginChat = "<color=red>Jail</color>: ";
         protected override void Load()
         {
+
             instance = this;
             string pluginDirec = this.Directory;
             pluginDirec += @"\JailsData.xml";
@@ -36,7 +37,6 @@ namespace Lafalafa.JailPlugin
 ;
             }
             StoreData.loadJails();
-            
             U.Events.OnPlayerConnected += Events_OnPlayerConnected;
             U.Events.OnPlayerDisconnected += Events_OnPlayerDisconnected;
             UnturnedPlayerEvents.OnPlayerDead += UnturnedPlayerEvents_OnPlayerDead;
@@ -44,6 +44,7 @@ namespace Lafalafa.JailPlugin
             StartCoroutine(checkPrisoner());
 
         }
+
 
         private void UnturnedPlayerEvents_OnPlayerRevive(UnturnedPlayer player, Vector3 position, byte angle)
         {
@@ -148,7 +149,7 @@ namespace Lafalafa.JailPlugin
                                         Provider.clients.ForEach(client =>
                                         {
 
-                                            //TODO PlayerEscapes civilian Args = nombre, jailname player_escape_civilian
+                                            
                                             ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("player_escape_civilian", prisioner.prisioner.DisplayName, prisioner.jail.name).Replace('(', '<').Replace(')', '>')}"), Color.white, null, client, EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
                                         });
                                     }
@@ -161,7 +162,7 @@ namespace Lafalafa.JailPlugin
 
                                             if (uclient.HasPermission("jailplugin.police"))
                                             {
-                                                //TODO PlayerEscapes Args = nombre, jailname  player_escape_police
+                                               
                                                 ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("player_escape_police", prisioner.prisioner.DisplayName, prisioner.jail.name).Replace('(', '<').Replace(')', '>')}"), Color.white, null, client, EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
                                             }
                                         });
