@@ -30,7 +30,7 @@ namespace Lafalafa.JailPlugin
         public bool reviving { get; set; }
         public CSteamID judge { get; private set; }
         public JailModel jail { get; private    set; }
-        
+        public string reason { get; private set; }
 
         public Prisoner(UnturnedPlayer prisioner, UnturnedPlayer judge, int time, string jailName)
         {
@@ -40,6 +40,7 @@ namespace Lafalafa.JailPlugin
             if (Jail.instance.Configuration.Instance.God) prisioner.Features.GodMode = true;
             timer =  new Timer(time*1000);
             online = true;
+            reason = "Not Reason";
             jail = JailModel.getJailFromName(jailName);
             _elapsedTime = new Stopwatch();
             _elapsedTime.Start();
@@ -48,6 +49,24 @@ namespace Lafalafa.JailPlugin
             timer.Enabled = true;
             timer.Start();
         }
+
+        public Prisoner(UnturnedPlayer prisioner, UnturnedPlayer judge, int time, string jailName, string reason)
+        {
+            this.prisioner = prisioner;
+            this.judge = judge.CSteamID;
+            this.reason = reason;
+            if (Jail.instance.Configuration.Instance.God) prisioner.Features.GodMode = true;
+            timer = new Timer(time * 1000);
+            online = true;
+            jail = JailModel.getJailFromName(jailName);
+            _elapsedTime = new Stopwatch();
+            _elapsedTime.Start();
+            timer.Elapsed += Timer_Elapsed;
+            timer.AutoReset = false;
+            timer.Enabled = true;
+            timer.Start();
+        }
+
         public void stopTimer()
         {
             timer.Stop();

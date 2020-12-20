@@ -16,6 +16,7 @@ namespace Lafalafa.JailPlugin.Helpers
         public string jailName;
         public int jailTime;
         public string reason;
+        public List<JailModel> jails;
         public List<SteamPlayer> onlinePlayers;
 
         public UnturnedPlayer prisoner;

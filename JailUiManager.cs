@@ -1,4 +1,5 @@
 ﻿using Lafalafa.JailPlugin.Helpers;
+using Lafalafa.JailPluginJailPlugin.Helpers;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
 using Steamworks;
@@ -28,20 +29,20 @@ namespace Lafalafa.JailPlugin
 
             switch (infoPlayer[player].onlinePlayersPage)
             {
-                case 0:
+                case 1:
                     playersOnline = Provider.clients.GetRange(0, playersOnline.Count);
                     infoPlayer[player].onlinePlayers = playersOnline;
                     break;
-                case 1:
+                case 2:
                     playersOnline = Provider.clients.GetRange(12, playersOnline.Count - 12);
                     infoPlayer[player].onlinePlayers = playersOnline;
                     
                     break;
-                case 2:
+                case 3:
                     playersOnline = Provider.clients.GetRange(24, playersOnline.Count - 24);
                     infoPlayer[player].onlinePlayers = playersOnline;
                     break;
-               case 3:
+               case 4:
                     playersOnline = Provider.clients.GetRange(36, playersOnline.Count - 36);
                     infoPlayer[player].onlinePlayers = playersOnline;
                     break;
@@ -79,25 +80,74 @@ namespace Lafalafa.JailPlugin
 
                 switch (buttonName)
                 {
-                    case "jailInput":
-                        
-
-                            infoPlayer[player.CSteamID].jailName = text;
-
-                  
+                    case "jailInput":              
+                            infoPlayer[player.CSteamID].jailName = text;                
                         break;
                     case "TimeInput":
-                            if (Int64.TryParse(text, out long result)) infoPlayer[player.CSteamID].jailTime = (int)result;   
+                        int time;
+                        var flag = Int32.TryParse(text, out int x) ? time = x : time= Jail.instance.Configuration.Instance.defaultTime;
+                        infoPlayer[player.CSteamID].jailTime = time;
                         break;
                     case "ReasonInput":
                         infoPlayer[player.CSteamID].reason = text;
                         break;
+                   
                 }
 
             }
 
         }
+        private void sendPrisonerJailsUi()
+        {
+            
 
+
+        }
+        private void sendJailsUi(CSteamID player, short key)
+        {
+            List<JailModel> jails = JailModel.getJails();
+            switch (infoPlayer[player].onlinePlayersPage)
+            {
+                case 1:
+                    jails = JailModel.getJails().GetRange(0, jails.Count);
+                    infoPlayer[player].jails = jails;
+                    break;
+                case 2:
+                    jails = JailModel.getJails().GetRange(6, jails.Count - 6);
+                    infoPlayer[player].jails = jails;
+
+                    break;
+                case 3:
+                    jails = JailModel.getJails().GetRange(12, jails.Count - 12);
+                    infoPlayer[player].jails = jails;
+                    break;
+                case 4:
+                    jails = JailModel.getJails().GetRange(18, jails.Count - 18);
+                    infoPlayer[player].jails = jails;
+                    break;
+                case 5:
+                    jails = JailModel.getJails().GetRange(24, jails.Count - 24);
+                    infoPlayer[player].jails = jails;
+                    break;
+
+            }
+            int count = 1;
+                
+            foreach (JailModel jail in jails)
+            {
+               
+                EffectManager.sendUIEffectVisibility(key, player, true, $"JailPlugin__AllJails_Jail{count}", true);
+                EffectManager.sendUIEffectImageURL(key, player, true, $"JailPlugin__AllJails_Name_Jail_{count}", jail.name);
+                count++;
+
+            }
+            for (int i = count; i <= 6; i++)
+            {
+                EffectManager.sendUIEffectVisibility(key, player, true, $"JailPlugin__AllJails_Jail{count}", false);
+            }
+
+
+        }
         private void onEffectButtonClicked(Player pplayer, string buttonName)
         {
             //JailPlugin_Admin_Players_ButtonArrest_3
@@ -110,69 +160,121 @@ namespace Lafalafa.JailPlugin
                 switch (button)
                 {
                     case "JailPlugin_Admin_Players_ButtonArrest":
+                        UnturnedPlayer unturnedPlayerPrisoner = UnturnedPlayer.FromSteamPlayer(infoPlayer[player.CSteamID].onlinePlayers[Int32.Parse(buttonName[buttonName.Length - 1].ToString())]);
+                        if (JailModel.getPlayer(unturnedPlayerPrisoner.CSteamID) != null)
+                        {
+                            ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("player_already_at_jail", JailModel.getPlayer(unturnedPlayerPrisoner.CSteamID).jail.name).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
+                            return;
 
-                        infoPlayer[player.CSteamID].prisoner = UnturnedPlayer.FromSteamPlayer(infoPlayer[player.CSteamID].onlinePlayers[Int32.Parse(buttonName[buttonName.Length - 1].ToString())]);
-
+                        }
+                        else
+                        {
+                            infoPlayer[player.CSteamID].prisoner = unturnedPlayerPrisoner;
+                        }
                         break;
                     case "JailPlugin_Admin_Players_ButtonRight":
 
-                        if (Provider.clients.Count <= 12)
+
+                        switch (infoUi.onlinePlayersPage)
                         {
-                            infoUi.onlinePlayersPage = 1;
-                            return;
-
-                        }
-                              
-                        else if (Provider.clients.Count <= 24)
-                        {
-                            infoUi.onlinePlayersPage = 2;
-                            return;
-                        }
-
-                        else if (Provider.clients.Count <= 36) {
+                            case 1:
+                             if (Provider.clients.Count <= 24 && Provider.clients.Count > 12)
+                             {
+                                 infoUi.onlinePlayersPage = 2;
+                             }
+                                break;
+                            case 2:
+                            if (Provider.clients.Count <= 36 && Provider.clients.Count > 24)
+                            {
                             infoUi.onlinePlayersPage = 3;
-                            return;
+                            }
+                                break;
+                            case 3:
+                                if (Provider.clients.Count <= 48 && Provider.clients.Count > 36)
+                                {
+                                    infoUi.onlinePlayersPage = 4;
+                                 
+                                }
+                                break;
+                           
+                                
+                       
+                      
                         }
-                        else if (Provider.clients.Count <= 48) {
-                            infoUi.onlinePlayersPage = 3;
-                            return;
-                        }
-
-                     
+                        //TODO Key Effec Online Player Ui 29210
+                        sendUiOnlinePlayers(player.CSteamID, 29210);
 
 
                         break;
                     case "JailPlugin_Admin_Players_ButtonLeft":
 
-                        switch(infoUi.onlinePlayersPage)
-                        if (Provider.clients.Count <= 12)
+
+                        switch (infoUi.onlinePlayersPage)
                         {
-                            infoUi.onlinePlayersPage = 0;
-                            return;
+                                                          
+                            case 2:
+                                if (Provider.clients.Count <= 12)
+                                {
+                                    infoUi.onlinePlayersPage = 1;
+                                }
+                                break;
+                            case 3:
+                                if (Provider.clients.Count <= 24 && Provider.clients.Count > 12)
+                                {
+                                    infoUi.onlinePlayersPage = 2;
+                              
+                                }
+                                break;
+                            case 4:
+                                if (Provider.clients.Count <= 36 && Provider.clients.Count > 24)
+                                {
+                                    infoUi.onlinePlayersPage = 3;
+                               
+                                }
+                                break;
+
+
 
                         }
-
-                        else if (Provider.clients.Count <= 24)
-                        {
-                            infoUi.onlinePlayersPage = 1;
-                            return;
-                        }
-
-                        else if (Provider.clients.Count <= 36)
-                        {
-                            infoUi.onlinePlayersPage = 3;
-                            return;
-                        }
-                        else if (Provider.clients.Count <= 48)
-                        {
-                            infoUi.onlinePlayersPage = 3;
-                            return;
-                        }
+ 
+                        sendUiOnlinePlayers(player.CSteamID, 29210);
 
 
                         break;
+                    case "JailPlugin_ButtonClose":
+
+                        EffectManager.askEffectClearByID(Jail.instance.Configuration.Instance.infoPrisonerEffectID, player.CSteamID);
+                        EffectManager.askEffectClearByID(Jail.instance.Configuration.Instance.jailAdminEffectID, player.CSteamID);
+                        EffectManager.askEffectClearByID(Jail.instance.Configuration.Instance.jailsEffectID, player.CSteamID);
+                        EffectManager.askEffectClearByID(Jail.instance.Configuration.Instance.infoPrisonerEffectID, player.CSteamID);
+                        EffectManager.askEffectClearByID(Jail.instance.Configuration.Instance.addPrisonerEffectID, player.CSteamID);
+                        EffectManager.askEffectClearByID(Jail.instance.Configuration.Instance.adminPlayersOnlineEffectID, player.CSteamID);
+                        infoPlayer.Remove(player.CSteamID);
+                        break;
+
+                    case "JailPlugin_AddPrisoner_ButtonConfirm":
+
+                        JailModel jail = JailModel.getJailFromName(infoUi.jailName);
+                        if (jail == null)
+                        {
+                            ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("jail_not_exist", infoUi.jailName).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
+                            return;
+
+                        }
 
 
+                        jail.addPrisonerJail(new Prisoner(infoUi.prisoner, player, infoUi.jailTime, infoUi.jailName, infoUi.reason));
+                        infoUi.prisoner.Player.teleportToLocation(new UnityEngine.Vector3(jail.x, jail.y, jail.z), player.Player.look.yaw);
+
+                        if (Jail.instance.Configuration.Instance.removeInventory) InventoryHelp.ClearPlayerInventory(PlayerTool.getPlayer(infoUi.prisoner.CSteamID));
+                        ItemTool.tryForceGiveItem(infoUi.prisoner.Player, (ushort)Jail.instance.Configuration.Instance.ShirtID, 1);
+                        ItemTool.tryForceGiveItem(infoUi.prisoner.Player, (ushort)Jail.instance.Configuration.Instance.PantsID, 1);
+                        infoUi.prisoner.Player.clothing.tellVisualToggle(infoUi.prisoner.CSteamID, 0, false);
+
+                        ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("player_send_you_to_jail", player.DisplayName, jail.name, infoUi.jailTime).Replace('(', '<').Replace(')', '>')}"), Color.white, null, infoUi.prisoner.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
+                        ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("player_send_other_to_jail", player.DisplayName, jail.name, infoUi.jailTime).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
+                        
+                        break;
 
                 }                
             }
