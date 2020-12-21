@@ -97,9 +97,28 @@ namespace Lafalafa.JailPlugin
             }
 
         }
-        private void sendPrisonerJailsUi()
+        private void sendPrisonerJailsUi(CSteamID player, int index, short key)
         {
-            
+            JailModel jail = JailModel.getJails()[index];
+            InfoUiPlayer infoUi = infoPlayer[player];
+            //comenzar desde el cero
+            EffectManager.sendUIEffectText(key, player, true, "JailPlugin_Jail_Admin_Players_Name", jail.name);
+            EffectManager.sendUIEffectText(key, player, true, "JailPlugin_Jail_Admin_Players_TotalPrisoners", jail.prisioners.Count.ToString());
+            EffectManager.sendUIEffectText(key, player, true, "JailPlugin_Jail_Admin_Players_Radious", jail.radius.ToString());
+            infoPlayer[player].prisoners =jail.prisioners.GetRange(infoUi.prisonersPage * 6, JailModel.getJails()[index].prisioners.Count - (infoUi.prisonersPage * 6));
+            int count = 1;
+            foreach (Prisoner prisoner in infoUi.prisoners)
+            {
+                
+                EffectManager.sendUIEffectVisibility(key,player,true, $"JailPlugin_Jail_Admin_Player{count}", true);
+                EffectManager.sendUIEffectImageURL(key,player,true, $"JailPlugin_Jail_Admin_Players_Logo_{count}", prisoner.prisioner.SteamProfile.AvatarFull.OriginalString);
+                EffectManager.sendUIEffectText(key,player,true, $"JailPlugin_Jail_Admin_Players_Name_{count}",prisoner.prisioner.CharacterName);
+                count++;
+            }
+            for (int i = count; i <= 6; i++)
+            {
+                EffectManager.sendUIEffectVisibility(key, player, true, $"JailPlugin_Jail_Admin_Player{count}", false);
+            }
 
 
         }
@@ -151,9 +170,10 @@ namespace Lafalafa.JailPlugin
         private void onEffectButtonClicked(Player pplayer, string buttonName)
         {
             //JailPlugin_Admin_Players_ButtonArrest_3
+            if (!buttonName.StartsWith("JailPlugin")) return;
             UnturnedPlayer player = UnturnedPlayer.FromPlayer(pplayer);
-
-            string button = buttonName.Remove(buttonName.Length - 2, 2);
+            string button = string.Empty;
+            if (buttonName.Contains("JailPlugin_Admin_Players_ButtonArrest")|| buttonName.Contains("JailPlugin_Jail_Admin_Players_Button_Info")|| buttonName.Contains("JailPlugin_Jail_Admin_Players_ButtonArrest")|| buttonName.Contains("JailPlugin__AllJails_ButtonRemove_Jail") || buttonName.Contains("JailPlugin__AllJails_ButtonRemove_Jail") || buttonName.Contains("JailPlugin__AllJails_ButtonTeleport_Jail")) button = buttonName.Remove(buttonName.Length - 2, 2);
             if (infoPlayer.ContainsKey(player.CSteamID))
             {
                 InfoUiPlayer infoUi = infoPlayer[player.CSteamID];
@@ -275,7 +295,21 @@ namespace Lafalafa.JailPlugin
                         ChatManager.serverSendMessage(string.Format($"{Jail.namePluginChat}{Jail.instance.Translations.Instance.Translate("player_send_other_to_jail", player.DisplayName, jail.name, infoUi.jailTime).Replace('(', '<').Replace(')', '>')}"), Color.white, null, player.SteamPlayer(), EChatMode.WELCOME, Jail.instance.Configuration.Instance.imageUrl, true);
                         
                         break;
+                    case "JailPlugin_Jail_Admin_Players_ButtonRight":
 
+                        int div = System.Math.DivRem(infoUi.jailSelected.prisioners.Count, 6, out int result);
+                        if (result != 0) div++;
+                        if (infoUi.prisonersPage++ > div) return;
+                        infoUi.prisonersPage++;
+                        break;
+                    case "JailPlugin_Jail_Admin_Players_ButtonLeft":                        
+                        if ((infoUi.prisonersPage-1)<0 ) return;
+                        infoUi.prisonersPage--;
+                        break;
+                    case "JailPlugin_Jail_Admin_Players_Button_Info":
+                        break;
+                    case "JailPlugin__AllJails_ButtonInfo_Jail":
+                        break;
                 }                
             }
         }
